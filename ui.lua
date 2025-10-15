@@ -2768,7 +2768,7 @@ function Library.Window(self, Options)
 	textHolder.BackgroundTransparency = 1
 	textHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	textHolder.BorderSizePixel = 0
-	textHolder.Size = Library.UDim2(1, -52, 1, 0)
+	textHolder.Size = Library.UDim2(1, 0, 1, 0)
 	textHolder.Parent = sliderframe
 
 	local slidername = Instance.new("TextLabel")		
@@ -2784,18 +2784,18 @@ function Library.Window(self, Options)
 	slidername.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	slidername.BorderSizePixel = 0
 	slidername.Position = UDim2.fromOffset(8, 0)
-	slidername.Size = Library.UDim2(1, -52, 1, 0)
+	slidername.Size = Library.UDim2(1, -16, 1, 0)
 	slidername.Parent = textHolder
 
 	local thebgofsliderbar = Instance.new("Frame")		
 	thebgofsliderbar.Name = "Thebgofsliderbar"
 	thebgofsliderbar.AnchorPoint = Vector2.new(1, 0.5)
 	thebgofsliderbar.BackgroundColor3 = Color3.fromRGB(33, 32, 43)
-	thebgofsliderbar.BackgroundTransparency = 1
+	thebgofsliderbar.BackgroundTransparency = 0
 	thebgofsliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	thebgofsliderbar.BorderSizePixel = 0
-	thebgofsliderbar.Position = UDim2.new(1, -7, 0.5, 0)
-	thebgofsliderbar.Size = Library.UDim2(1, -120, 0, 8)
+	thebgofsliderbar.Position = UDim2.new(1, -20, 0.5, 0)
+	thebgofsliderbar.Size = Library.UDim2(0.7, 0, 0, 8)
 	thebgofsliderbar.Parent = sliderframe
 
 	local uICorner1 = Instance.new("UICorner")		
