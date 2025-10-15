@@ -1015,7 +1015,7 @@ function Library.Window(self, Options)
 	function Library.SetOpen(self, bool)
 		if (typeof(bool) == "boolean") then
 			Library.Open = bool
-			Library.Blurframe.Disabled = bool
+			Library.Blurframe.Enabled = bool
 			Library.mainframe.Visible = bool
 
 			if (bool) then
