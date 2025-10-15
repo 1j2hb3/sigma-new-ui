@@ -2775,7 +2775,7 @@ function Library.Window(self, Options)
 		slidername.Name = "Slidername"
 		slidername.FontFace = Font.new("rbxassetid://12187365364")		
 		slidername.Text = Slider.Name
-		slidername.TextColor3 = Color3.fromRGB(115, 115, 115)
+		slidername.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
 		slidername.TextXAlignment = Enum.TextXAlignment.Left
@@ -2922,7 +2922,7 @@ function Library.Window(self, Options)
 			local hoverTween = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 			TweenService:Create(slidername, hoverTween, {
-				TextColor3 = Color3.fromRGB(115, 115, 115),
+				TextColor3 = Color3.fromRGB(255, 255, 255),
 			}):Play()
 		end)
 
