@@ -2841,7 +2841,6 @@ function Library.Window(self, Options)
 		slidertextbox.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidertextbox.TextSize = Library.GetScaledTextSize(12)
 		slidertextbox.TextXAlignment = Enum.TextXAlignment.Center
-		slidertextbox.TextYAlignment = Enum.TextYAlignment.Center
 		slidertextbox.AnchorPoint = Vector2.new(0.5, 0.5)
 		slidertextbox.AutomaticSize = Enum.AutomaticSize.X
 		slidertextbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
