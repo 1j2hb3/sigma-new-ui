@@ -896,244 +896,35 @@ function Library.Window(self, Options)
 	BlurTemplate.BackgroundTransparency = 1
 	Library.BlurTemplate = BlurTemplate
 
-	local troot = Instance.new("Folder", workspace.CurrentCamera)
-	troot.Name = "BlurSnox"
-
-	local gTokenMH = 99999999
-	local gToken = math.random(1, gTokenMH)
-
-	local DepthOfField = Instance.new("DepthOfFieldEffect", game:GetService("Lighting"))
-	DepthOfField.FarIntensity = 0
-	Library.Blurframe = DepthOfField
-	DepthOfField.FocusDistance = 51.6
-	DepthOfField.InFocusRadius = 50
-	DepthOfField.NearIntensity = 1
-	DepthOfField.Name = "DPT_" .. gToken
-
+	-- No DepthOfField or custom blur folder needed
 	local blurframe = Library.BlurTemplate:Clone()
 	blurframe.Parent = mainframe
-
-	local GenUid
-	do
-		local id = 0
-		function GenUid()
-			id = id + 1
-			return "neon::" .. tostring(id)
-		end
-	end
-
-	local function IsNotNaN(x)
-		return x == x
-	end
-
-	local dothat = IsNotNaN(workspace.CurrentCamera:ScreenPointToRay(0, 0).Origin.x)
-	while (not dothat) do
-		RunService.RenderStepped:wait()
-		dothat = IsNotNaN(workspace.CurrentCamera:ScreenPointToRay(0, 0).Origin.x)
-	end
-
-	local DrawQuad
-	local acos, max, pi, sqrt = math.acos, math.max, math.pi, math.sqrt
-	local sz = 0.2
-
-	function DrawTriangle(v1, v2, v3, p0, p1)
-		local s1 = (v1 - v2).magnitude
-		local s2 = (v2 - v3).magnitude
-		local s3 = (v3 - v1).magnitude
-		local smax = max(s1, s2, s3)
-		local A, B, C
-		if (s1 == smax) then
-			A, B, C = v1, v2, v3
-		elseif (s2 == smax) then
-			A, B, C = v2, v3, v1
-		elseif (s3 == smax) then
-			A, B, C = v3, v1, v2
-		end
-
-		local para = ((B - A).x * (C - A).x + (B - A).y * (C - A).y + (B - A).z * (C - A).z) / (A - B).magnitude
-		local perp = sqrt((C - A).magnitude ^ 2 - para * para)
-		local dif_para = (A - B).magnitude - para
-
-		local st = CFrame.new(B, A)
-		local za = CFrame.Angles(pi / 2, 0, 0)
-
-		local cf0 = st
-
-		local Top_Look = (cf0 * za).lookVector
-		local Mid_Point = A + CFrame.new(A, B).LookVector * para
-		local Needed_Look = CFrame.new(Mid_Point, C).LookVector
-		local dot = Top_Look.x * Needed_Look.x + Top_Look.y * Needed_Look.y + Top_Look.z * Needed_Look.z
-
-		local ac = CFrame.Angles(0, 0, acos(dot))
-
-		cf0 = cf0 * ac
-		if (((cf0 * za).lookVector - Needed_Look).magnitude > 0.01) then
-			cf0 = cf0 * CFrame.Angles(0, 0, -2* acos(dot))
-		end
-		cf0 = cf0 * CFrame.new(0, perp / 2, -(dif_para + para / 2))
-
-		local cf1 = st * ac * CFrame.Angles(0, pi, 0)
-		if (((cf1 * za).lookVector - Needed_Look).magnitude > 0.01) then
-			cf1 = cf1 * CFrame.Angles(0, 0, 2 * acos(dot))
-		end
-		cf1 = cf1 * CFrame.new(0, perp / 2, dif_para / 2)
-
-		if (not p0) then
-			p0 = Instance.new("Part")			
-			p0.FormFactor = "Custom"
-			p0.TopSurface = 0
-			p0.BottomSurface = 0
-			p0.Anchored = true
-			p0.CanCollide = false
-			p0.CastShadow = false
-			p0.Material = "Glass"
-			p0.Size = Vector3.new(sz, sz, sz)
-			local mesh = Instance.new("SpecialMesh", p0)
-			mesh.MeshType = 2
-			mesh.Name = "WedgeMesh"
-		end
-		p0.WedgeMesh.Scale = Vector3.new(0, perp / sz, para / sz)
-		p0.CFrame = cf0
-
-		if (not p1) then
-			p1 = p0:clone()
-		end
-		p1.WedgeMesh.Scale = Vector3.new(0, perp / sz, dif_para / sz)
-		p1.CFrame = cf1
-
-		return p0, p1
-	end
-
-	function DrawQuad(v1, v2, v3, v4, parts)
-		parts[1], parts[2] = DrawTriangle(v1, v2, v3, parts[1], parts[2])
-		parts[3], parts[4] = DrawTriangle(v3, v2, v4, parts[3], parts[4])
-	end
-
-	local binds = {}
 
 	warn("SetOpen")
 	function Library.SetOpen(self, bool)
 		if (typeof(bool) == "boolean") then
 			Library.Open = bool
-			Library.Blurframe.Enabled = bool
 			Library.mainframe.Visible = bool
 
 			if (bool) then
-				blurframe = Library.BlurTemplate:Clone()
-				blurframe.Parent = mainframe
-
-				local parents = {}
-				local function add(child)
-					if (child:IsA("GuiObject")) then
-						parents[#parents + 1] = child
-						add(child.Parent)
-					end
-				end
-
-				table.clear(parents)
-				add(blurframe)
-
-				local uid = GenUid()
-				local parts = {}
-				local f = Instance.new("Folder", root)
-				f.Name = blurframe.Name
-
-				binds[uid] = {
-					parts = parts,
-					frame = blurframe,
-				}
-
-				local function UpdateOrientation(fetchProps)
-					local properties = {
-						Transparency = 0.98,
-						BrickColor = BrickColor.new("Institutional white"),
-					}
-					local zIndex = 1 - 0.05 * blurframe.ZIndex
-
-					local tl, br = blurframe.AbsolutePosition, blurframe.AbsolutePosition + blurframe.AbsoluteSize
-					local tr, bl = Vector2.new(br.x, tl.y), Vector2.new(tl.x, br.y)
-					
-					local rot = 0
-					for _, v in ipairs(parents) do
-						rot = rot + v.Rotation
-					end
-					if (rot ~= 0 and rot % 180 ~= 0) then
-						local mid = tl:lerp(br, 0.5)
-						local s, c = math.sin(math.rad(rot)), math.cos(math.rad(rot))
-
-						tl = Vector2.new(c * (tl.x - mid.x) - s * (tl.y - mid.y), s * (tl.x - mid.x) + c * (tl.y - mid.y)) + mid
-						tr = Vector2.new(c * (tr.x - mid.x) - s * (tr.y - mid.y), s * (tr.x - mid.x) + c * (tr.y - mid.y)) + mid
-						bl = Vector2.new(c * (bl.x - mid.x) - s * (bl.y - mid.y), s * (bl.x - mid.x) + c * (bl.y - mid.y)) + mid
-						br = Vector2.new(c * (br.x - mid.x) - s * (br.y - mid.y), s * (br.x - mid.x) + c * (br.y - mid.y)) + mid
-					end
-					
-					DrawQuad(
-						workspace.CurrentCamera:ScreenPointToRay(tl.x, tl.y, zIndex).Origin,
-						workspace.CurrentCamera:ScreenPointToRay(tr.x, tr.y, zIndex).Origin,
-						workspace.CurrentCamera:ScreenPointToRay(bl.x, bl.y, zIndex).Origin,
-						workspace.CurrentCamera:ScreenPointToRay(br.x, br.y, zIndex).Origin,
-						parts
-					)
-					if (fetchProps) then
-						for _, pt in pairs(parts) do
-							pt.Parent = f
-						end
-						for propName, propValue in pairs(properties) do
-							for _, pt in pairs(parts) do
-								pt[propName] = propValue
-							end
-						end
-					end
-				end
-
-				UpdateOrientation(true)
-
-				-- Use Heartbeat connection instead of BindToRenderStep for Luarmor compatibility
-				local connection = RunService.Heartbeat:Connect(function()
-					if (Library.Open) then
-						UpdateOrientation()
-					else
-						connection:Disconnect()
-					end
-				end)
-				
-				-- Store connection for cleanup
-				binds[uid].connection = connection
+				-- Optional: Clone a simple overlay frame if you still want a non-blur dim (e.g., semi-transparent black tint)
+				local overlay = Instance.new("Frame")
+				overlay.Size = UDim2.fromScale(1, 1)
+				overlay.Position = UDim2.fromScale(0, 0)
+				overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+				overlay.BackgroundTransparency = 0.5
+				overlay.ZIndex = -1
+				overlay.Parent = mainframe
 			else
-				for uid, bind in pairs(binds) do
-					-- Disconnect the Heartbeat connection instead of UnbindFromRenderStep
-					if (bind.connection) then
-						bind.connection:Disconnect()
+				-- Optional: Clean up any overlay if you added one above
+				for _, child in ipairs(mainframe:GetChildren()) do
+					if child:IsA("Frame") and child.BackgroundTransparency == 0.5 then
+						child:Destroy()
 					end
-
-					for _, part in pairs(bind.parts) do
-						part.Transparency = 1
-					end
-
-					if (root) then
-						for _, folder in ipairs(root:GetChildren()) do
-							if (folder:IsA("Folder")) then
-								for _, part in ipairs(folder:GetChildren()) do
-									if (part:IsA("BasePart")) then
-										part.Transparency = 1
-									end
-								end
-							end
-						end
-					end
-
-					binds[uid] = nil
-				end
-
-				if (blurframe) then
-					blurframe:Destroy()
-					blurframe = nil
 				end
 			end
 		end
 	end
-
-	warn("Library")
 
 	Library:SetOpen(true)
 
@@ -2785,7 +2576,7 @@ function Library.Window(self, Options)
 		slidername.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
-		slidername.TextXAlignment = Enum.TextXAlignment.Center
+		slidername.TextXAlignment = Enum.TextXAlignment.Left
 		slidername.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.BackgroundTransparency = 1
 		slidername.BorderColor3 = Color3.fromRGB(0, 0, 0)
