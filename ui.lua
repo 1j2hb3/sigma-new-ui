@@ -2782,16 +2782,16 @@ function Library.Window(self, Options)
 		slidername.Name = "Slidername"
 		slidername.FontFace = Font.new("rbxassetid://12187365364")		
 		slidername.Text = Slider.Name
-		slidername.TextColor3 = Color3.fromRGB(115, 115, 115)
+		slidername.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
-		slidername.TextXAlignment = Enum.TextXAlignment.Center  -- ← CHANGED: Now center-aligned
+		slidername.TextXAlignment = Enum.TextXAlignment.Left
 		slidername.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.BackgroundTransparency = 1
 		slidername.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		slidername.BorderSizePixel = 0
-		slidername.Position = UDim2.new(0, 0, 0, 0)  -- ← CHANGED: No offset, full anchor at (0,0)
-		slidername.Size = Library.UDim2(1, 0, 1, 0)  -- ← CHANGED: Full size within textHolder (no right margin on label itself)
+		slidername.Position = UDim2.fromOffset(8, 0)
+		slidername.Size = Library.UDim2(1, -52, 1, 0)
 		slidername.Parent = textHolder
 
 		local thebgofsliderbar = Instance.new("Frame")		
