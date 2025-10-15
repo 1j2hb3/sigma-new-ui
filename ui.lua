@@ -2843,6 +2843,22 @@ function Library.Window(self, Options)
 		slidertextbox.Position = UDim2.new(0.5, 0, 0.5, 0)
 		slidertextbox.Size = UDim2.new(0, 0, 1, 0)
 
+		local valuemaxlabel = Instance.new("TextLabel", sliderframe)
+		valuemaxlabel.Name = "Valuemaxlabel"
+		valuemaxlabel.FontFace = Font.new("rbxassetid://12187365364")		
+		valuemaxlabel.Text = "50/100"
+		valuemaxlabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+		valuemaxlabel.TextSize = Library.GetScaledTextSize(12)
+		valuemaxlabel.TextXAlignment = Enum.TextXAlignment.Right
+		valuemaxlabel.AnchorPoint = Vector2.new(1, 0)
+		valuemaxlabel.AutomaticSize = Enum.AutomaticSize.X
+		valuemaxlabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		valuemaxlabel.BackgroundTransparency = 1
+		valuemaxlabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		valuemaxlabel.BorderSizePixel = 0
+		valuemaxlabel.Position = UDim2.new(1, -8, 0, 2)
+		valuemaxlabel.Size = UDim2.new(0, 0, 0, Library.GetScaledTextSize(12))
+
 		local Sliding = false
 		local format = "%." .. Slider.Decimals .. "f"
 
@@ -2866,6 +2882,8 @@ function Library.Window(self, Options)
 			if (not fromInput or slidertextbox.Text ~= (string.format(format, Slider.Value) .. Slider.Suffix)) then
 				slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
 			end
+
+			valuemaxlabel.Text = string.format(format, Slider.Value) .. "/" .. string.format(format, Slider.Max)
 
             Library.SetFlag(Slider.Flag, Slider.Value)
 			Library.Callbacks[Slider.Flag] = Slider.Callback
