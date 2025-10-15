@@ -520,7 +520,7 @@ function Library.Window(self, Options)
     local mainframe = Instance.new("Frame", newgabrieluibyraphael)
     mainframe.Name = "mainframe"
     mainframe.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
-    mainframe.BackgroundTransparency = 0.07
+    mainframe.BackgroundTransparency = 0.5
     mainframe.BorderColor3 = Color3.fromRGB(0, 0, 0)
     mainframe.BorderSizePixel = 0
 
@@ -907,7 +907,7 @@ function Library.Window(self, Options)
 	Library.Blurframe = DepthOfField
 	DepthOfField.FocusDistance = 51.6
 	DepthOfField.InFocusRadius = 50
-	DepthOfField.NearIntensity = 1
+	DepthOfField.NearIntensity = 0.3  -- Reduced from 1 (less blur)
 	DepthOfField.Name = "DPT_" .. gToken
 
 	local blurframe = Library.BlurTemplate:Clone()
@@ -1015,7 +1015,7 @@ function Library.Window(self, Options)
 	function Library.SetOpen(self, bool)
 		if (typeof(bool) == "boolean") then
 			Library.Open = bool
-			Library.Blurframe.Enabled = bool
+			Library.Blurframe.Disabled = bool
 			Library.mainframe.Visible = bool
 
 			if (bool) then
