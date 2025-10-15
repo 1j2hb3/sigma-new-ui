@@ -491,6 +491,7 @@ function Library.Window(self, Options)
 		Name = Options.Name or "lunacy.solutions",
         Key = Options.Key,
         Logo = Options.Logo,
+		ToggleKey = Options.ToggleKey or Library.UIKey,
 		Sections = {},
 		Elements = {},
 		Dragging = { false, UDim2.new(0, 0, 0, 0) },
@@ -506,6 +507,12 @@ function Library.Window(self, Options)
 
 	Library:connection(UserInputService.InputBegan, function(Input)
 		if (Input.KeyCode == Library.UIKey) then
+			Library:SetOpen(not Library.Open)
+		end
+	end)
+
+	Library:connection(UserInputService.InputBegan, function(Input)
+		if (Input.KeyCode == Window.ToggleKey) then  -- Use window-specific toggle key
 			Library:SetOpen(not Library.Open)
 		end
 	end)
@@ -2737,7 +2744,7 @@ function Library.Window(self, Options)
 			Properties = {}
 		end
 
-		local Slider = {
+	local Slider = {
 			Window = self.Window,
 			Section = self,
 			Name = Properties.Name or "Slider",
