@@ -485,12 +485,12 @@ function Library.MakeDraggable(self, topbarobject, object)
     end)
 end
 
-function Library.Window(self, Options)
 	local Window = {
 		Tabs = {},
 		Name = Options.Name or "lunacy.solutions",
-        Key = Options.Key,
-        Logo = Options.Logo,
+		Key = Options.Key,
+		Logo = Options.Logo,
+		ToggleKey = Options.ToggleKey or Library.UIKey,  -- New: Support custom toggle key, default to global UIKey (End)
 		Sections = {},
 		Elements = {},
 		Dragging = { false, UDim2.new(0, 0, 0, 0) },
@@ -505,7 +505,7 @@ function Library.Window(self, Options)
 	newgabrieluibyraphael.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Library:connection(UserInputService.InputBegan, function(Input)
-		if (Input.KeyCode == Library.UIKey) then
+		if (Input.KeyCode == Window.ToggleKey) then  -- Use window-specific toggle key
 			Library:SetOpen(not Library.Open)
 		end
 	end)
