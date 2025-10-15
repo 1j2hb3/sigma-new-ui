@@ -68,7 +68,7 @@ Library = {
 
 	Connections = {},
 	connections = {},
-	UIKey = Enum.KeyCode.End,
+	UIKey = Enum.KeyCode.End,  -- Default toggle key; can be overridden per-window via Options.ToggleKey
 	ScreenGUI = nil,
 	Fontsize = 12,
 }
@@ -488,7 +488,6 @@ end
 	local Window = {
 		Tabs = {},
 		Name = Options.Name or "lunacy.solutions",
-		Key = Options.Key,
 		Logo = Options.Logo,
 		ToggleKey = Options.ToggleKey or Library.UIKey,  -- New: Support custom toggle key, default to global UIKey (End)
 		Sections = {},
