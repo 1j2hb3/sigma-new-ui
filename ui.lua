@@ -2811,7 +2811,7 @@ function Library.Window(self, Options)
 
 		local thesliderbar = Instance.new("Frame")		
 		thesliderbar.Name = "Thesliderbar"
-		thesliderbar.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+		thesliderbar.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
 		thesliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		thesliderbar.BorderSizePixel = 0
 		thesliderbar.Size = Library.UDim2(0, 0, 1, 0)
@@ -2819,7 +2819,7 @@ function Library.Window(self, Options)
 
 		local uIStroke = Instance.new("UIStroke")		
 		uIStroke.Name = "UIStroke"
-		uIStroke.Color = Color3.fromRGB(170, 170, 170)
+		uIStroke.Color = Color3.fromRGB(140, 140, 140)
 		uIStroke.Parent = thesliderbar
 
 		local uICorner = Instance.new("UICorner")		
@@ -2831,7 +2831,7 @@ function Library.Window(self, Options)
 		slidertextbox.Name = "Slidertextbox"
 		slidertextbox.FontFace = Font.new("rbxassetid://12187365364")		
 		slidertextbox.Text = "50"
-		slidertextbox.TextColor3 = Color3.fromRGB(67, 67, 68)
+		slidertextbox.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidertextbox.TextSize = Library.GetScaledTextSize(12)
 		slidertextbox.TextXAlignment = Enum.TextXAlignment.Center
 		slidertextbox.AnchorPoint = Vector2.new(0.5, 0.5)
