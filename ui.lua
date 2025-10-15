@@ -491,7 +491,6 @@ function Library.Window(self, Options)
 		Name = Options.Name or "lunacy.solutions",
         Key = Options.Key,
         Logo = Options.Logo,
-		ToggleKey = Options.ToggleKey or Library.UIKey,
 		Sections = {},
 		Elements = {},
 		Dragging = { false, UDim2.new(0, 0, 0, 0) },
@@ -507,12 +506,6 @@ function Library.Window(self, Options)
 
 	Library:connection(UserInputService.InputBegan, function(Input)
 		if (Input.KeyCode == Library.UIKey) then
-			Library:SetOpen(not Library.Open)
-		end
-	end)
-
-	Library:connection(UserInputService.InputBegan, function(Input)
-		if (Input.KeyCode == Window.ToggleKey) then  -- Use window-specific toggle key
 			Library:SetOpen(not Library.Open)
 		end
 	end)
@@ -2744,7 +2737,7 @@ function Library.Window(self, Options)
 			Properties = {}
 		end
 
-	local Slider = {
+		local Slider = {
 			Window = self.Window,
 			Section = self,
 			Name = Properties.Name or "Slider",
@@ -2782,7 +2775,7 @@ function Library.Window(self, Options)
 		slidername.Name = "Slidername"
 		slidername.FontFace = Font.new("rbxassetid://12187365364")		
 		slidername.Text = Slider.Name
-		slidername.TextColor3 = Color3.fromRGB(255, 255, 255)
+		slidername.TextColor3 = Color3.fromRGB(115, 115, 115)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
 		slidername.TextXAlignment = Enum.TextXAlignment.Left
@@ -2798,7 +2791,7 @@ function Library.Window(self, Options)
 		thebgofsliderbar.Name = "Thebgofsliderbar"
 		thebgofsliderbar.AnchorPoint = Vector2.new(1, 0.5)
 		thebgofsliderbar.BackgroundColor3 = Color3.fromRGB(33, 32, 43)
-		thebgofsliderbar.BackgroundTransparency = 0.25
+		thebgofsliderbar.BackgroundTransparency = 1
 		thebgofsliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		thebgofsliderbar.BorderSizePixel = 0
 		thebgofsliderbar.Position = UDim2.new(1, -7, 0.5, 0)
@@ -2818,7 +2811,7 @@ function Library.Window(self, Options)
 
 		local thesliderbar = Instance.new("Frame")		
 		thesliderbar.Name = "Thesliderbar"
-		thesliderbar.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+		thesliderbar.BackgroundColor3 = Color3.fromRGB(35, 35, 33)
 		thesliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		thesliderbar.BorderSizePixel = 0
 		thesliderbar.Size = Library.UDim2(0, 0, 1, 0)
@@ -2826,7 +2819,7 @@ function Library.Window(self, Options)
 
 		local uIStroke = Instance.new("UIStroke")		
 		uIStroke.Name = "UIStroke"
-		uIStroke.Color = Color3.fromRGB(140, 140, 140)
+		uIStroke.Color = Color3.fromRGB(38, 38, 36)
 		uIStroke.Parent = thesliderbar
 
 		local uICorner = Instance.new("UICorner")		
@@ -2834,21 +2827,25 @@ function Library.Window(self, Options)
 		uICorner.CornerRadius = UDim.new(0, 1)
 		uICorner.Parent = thesliderbar
 
-		local slidertextbox = Instance.new("TextLabel", thebgofsliderbar)
+		local slidertextbox = Instance.new("TextBox", thesliderbar)
 		slidertextbox.Name = "Slidertextbox"
+		slidertextbox.CursorPosition = -1		
 		slidertextbox.FontFace = Font.new("rbxassetid://12187365364")		
+		slidertextbox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 		slidertextbox.Text = "50"
-		slidertextbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+		slidertextbox.TextColor3 = Color3.fromRGB(67, 67, 68)
 		slidertextbox.TextSize = Library.GetScaledTextSize(12)
-		slidertextbox.TextXAlignment = Enum.TextXAlignment.Center
-		slidertextbox.AnchorPoint = Vector2.new(0.5, 0.5)
+		slidertextbox.TextXAlignment = Enum.TextXAlignment.Right
+		slidertextbox.Active = false
+		slidertextbox.AnchorPoint = Vector2.new(1, 0.5)
 		slidertextbox.AutomaticSize = Enum.AutomaticSize.X
 		slidertextbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidertextbox.BackgroundTransparency = 1
 		slidertextbox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		slidertextbox.BorderSizePixel = 0
-		slidertextbox.Position = UDim2.new(0.5, 0, 0.5, 0)
-		slidertextbox.Size = UDim2.new(0, 0, 1, 0)
+		slidertextbox.Position = UDim2.new(1, 8, 0.5, 0)
+		slidertextbox.Selectable = false
+		slidertextbox.Size = Library.UDim2(0, 0, 1, 4)
 
 		local Sliding = false
 		local format = "%." .. Slider.Decimals .. "f"
@@ -2899,6 +2896,9 @@ function Library.Window(self, Options)
 			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
 				Sliding = true
 				HandleSlide(input)
+				if (slidertextbox:IsFocused()) then
+					slidertextbox:ReleaseFocus()
+				end
 			end
 		end)
 
@@ -2911,6 +2911,32 @@ function Library.Window(self, Options)
 		UserInputService.InputChanged:Connect(function(input)
 			if (Sliding and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch)) then
 				HandleSlide(input)
+			end
+		end)
+
+		slidertextbox.FocusLost:Connect(function(enterPressed)
+			-- Check if the section or element is disabled
+			if Slider.Section.Disabled or Slider.Disabled then
+				return
+			end
+			if (enterPressed) then
+				local textContent = slidertextbox.Text
+				local numericString = textContent
+
+				if (Slider.Suffix and Slider.Suffix ~= "") then
+					local escapedSuffixPattern = Slider.Suffix:gsub("([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1")
+					numericString = textContent:gsub(escapedSuffixPattern, "")
+				end
+
+				local numValue = tonumber(numericString)
+
+				if (numValue) then
+					SetValue(numValue, true)
+				else
+					slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
+				end
+			else
+				slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
 			end
 		end)
 
@@ -2929,7 +2955,7 @@ function Library.Window(self, Options)
 			local hoverTween = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 			TweenService:Create(slidername, hoverTween, {
-				TextColor3 = Color3.fromRGB(255, 255, 255),
+				TextColor3 = Color3.fromRGB(115, 115, 115),
 			}):Play()
 		end)
 
