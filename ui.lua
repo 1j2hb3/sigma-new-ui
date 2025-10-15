@@ -2785,20 +2785,20 @@ function Library.Window(self, Options)
 		slidername.TextColor3 = Color3.fromRGB(115, 115, 115)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
-		slidername.TextXAlignment = Enum.TextXAlignment.Center
+		slidername.TextXAlignment = Enum.TextXAlignment.Center  -- ← CHANGED: Now center-aligned
 		slidername.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.BackgroundTransparency = 1
 		slidername.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		slidername.BorderSizePixel = 0
-		slidername.Position = UDim2.new(0, 0, 0, 0)
-		slidername.Size = Library.UDim2(1, 0, 1, 0)
+		slidername.Position = UDim2.new(0, 0, 0, 0)  -- ← CHANGED: No offset, full anchor at (0,0)
+		slidername.Size = Library.UDim2(1, 0, 1, 0)  -- ← CHANGED: Full size within textHolder (no right margin on label itself)
 		slidername.Parent = textHolder
 
 		local thebgofsliderbar = Instance.new("Frame")		
 		thebgofsliderbar.Name = "Thebgofsliderbar"
 		thebgofsliderbar.AnchorPoint = Vector2.new(1, 0.5)
 		thebgofsliderbar.BackgroundColor3 = Color3.fromRGB(33, 32, 43)
-		thebgofsliderbar.BackgroundTransparency = 1
+		thebgofsliderbar.BackgroundTransparency = 0.25
 		thebgofsliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		thebgofsliderbar.BorderSizePixel = 0
 		thebgofsliderbar.Position = UDim2.new(1, -7, 0.5, 0)
@@ -2818,7 +2818,7 @@ function Library.Window(self, Options)
 
 		local thesliderbar = Instance.new("Frame")		
 		thesliderbar.Name = "Thesliderbar"
-		thesliderbar.BackgroundColor3 = Color3.fromRGB(35, 35, 33)
+		thesliderbar.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
 		thesliderbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		thesliderbar.BorderSizePixel = 0
 		thesliderbar.Size = Library.UDim2(0, 0, 1, 0)
@@ -2826,7 +2826,7 @@ function Library.Window(self, Options)
 
 		local uIStroke = Instance.new("UIStroke")		
 		uIStroke.Name = "UIStroke"
-		uIStroke.Color = Color3.fromRGB(38, 38, 36)
+		uIStroke.Color = Color3.fromRGB(140, 140, 140)
 		uIStroke.Parent = thesliderbar
 
 		local uICorner = Instance.new("UICorner")		
@@ -2834,25 +2834,21 @@ function Library.Window(self, Options)
 		uICorner.CornerRadius = UDim.new(0, 1)
 		uICorner.Parent = thesliderbar
 
-		local slidertextbox = Instance.new("TextBox", thesliderbar)
+		local slidertextbox = Instance.new("TextLabel", thebgofsliderbar)
 		slidertextbox.Name = "Slidertextbox"
-		slidertextbox.CursorPosition = -1		
 		slidertextbox.FontFace = Font.new("rbxassetid://12187365364")		
-		slidertextbox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 		slidertextbox.Text = "50"
-		slidertextbox.TextColor3 = Color3.fromRGB(67, 67, 68)
+		slidertextbox.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidertextbox.TextSize = Library.GetScaledTextSize(12)
-		slidertextbox.TextXAlignment = Enum.TextXAlignment.Right
-		slidertextbox.Active = false
-		slidertextbox.AnchorPoint = Vector2.new(1, 0.5)
+		slidertextbox.TextXAlignment = Enum.TextXAlignment.Center
+		slidertextbox.AnchorPoint = Vector2.new(0.5, 0.5)
 		slidertextbox.AutomaticSize = Enum.AutomaticSize.X
 		slidertextbox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidertextbox.BackgroundTransparency = 1
 		slidertextbox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		slidertextbox.BorderSizePixel = 0
-		slidertextbox.Position = UDim2.new(1, 8, 0.5, 0)
-		slidertextbox.Selectable = false
-		slidertextbox.Size = Library.UDim2(0, 0, 1, 4)
+		slidertextbox.Position = UDim2.new(0.5, 0, 0.5, 0)
+		slidertextbox.Size = UDim2.new(0, 0, 1, 0)
 
 		local Sliding = false
 		local format = "%." .. Slider.Decimals .. "f"
@@ -2878,9 +2874,9 @@ function Library.Window(self, Options)
 				slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
 			end
 
-			Library.SetFlag(Slider.Flag, Slider.Value)
+            Library.SetFlag(Slider.Flag, Slider.Value)
 			Library.Callbacks[Slider.Flag] = Slider.Callback
-			Library.Elements[Slider.Flag] = Slider
+            Library.Elements[Slider.Flag] = Slider
 		end
 
 		local function HandleSlide(input)
@@ -2903,9 +2899,6 @@ function Library.Window(self, Options)
 			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
 				Sliding = true
 				HandleSlide(input)
-				if (slidertextbox:IsFocused()) then
-					slidertextbox:ReleaseFocus()
-				end
 			end
 		end)
 
@@ -2918,32 +2911,6 @@ function Library.Window(self, Options)
 		UserInputService.InputChanged:Connect(function(input)
 			if (Sliding and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch)) then
 				HandleSlide(input)
-			end
-		end)
-
-		slidertextbox.FocusLost:Connect(function(enterPressed)
-			-- Check if the section or element is disabled
-			if Slider.Section.Disabled or Slider.Disabled then
-				return
-			end
-			if (enterPressed) then
-				local textContent = slidertextbox.Text
-				local numericString = textContent
-
-				if (Slider.Suffix and Slider.Suffix ~= "") then
-					local escapedSuffixPattern = Slider.Suffix:gsub("([%(%)%.%%%+%-%*%?%[%^%$])", "%%%1")
-					numericString = textContent:gsub(escapedSuffixPattern, "")
-				end
-
-				local numValue = tonumber(numericString)
-
-				if (numValue) then
-					SetValue(numValue, true)
-				else
-					slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
-				end
-			else
-				slidertextbox.Text = string.format(format, Slider.Value) .. Slider.Suffix
 			end
 		end)
 
@@ -2962,7 +2929,7 @@ function Library.Window(self, Options)
 			local hoverTween = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 			TweenService:Create(slidername, hoverTween, {
-				TextColor3 = Color3.fromRGB(115, 115, 115),
+				TextColor3 = Color3.fromRGB(255, 255, 255),
 			}):Play()
 		end)
 
@@ -2975,17 +2942,18 @@ function Library.Window(self, Options)
 		function Slider.GetValue(self)
 			return Slider.Value
 		end
-
+		
 		function Slider.SetVisible(self, visible)
 			sliderframe.Visible = visible
 		end
-
+		
 		-- Check dependencies on creation
 		if Slider.Depends then
 			Library.UpdateElementVisibility(Slider)
 		end
 
 		return Slider
+	end
 
 	function Sections.Dropdown(self, Properties)
 		if (not Properties) then
