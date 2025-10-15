@@ -68,7 +68,7 @@ Library = {
 
 	Connections = {},
 	connections = {},
-	UIKey = Enum.KeyCode.End,  -- Default toggle key; can be overridden per-window via Options.ToggleKey
+	UIKey = Enum.KeyCode.End,
 	ScreenGUI = nil,
 	Fontsize = 12,
 }
@@ -485,11 +485,13 @@ function Library.MakeDraggable(self, topbarobject, object)
     end)
 end
 
+function Library.Window(self, Options)
 	local Window = {
 		Tabs = {},
 		Name = Options.Name or "lunacy.solutions",
-		Logo = Options.Logo,
-		ToggleKey = Options.ToggleKey or Library.UIKey,  -- New: Support custom toggle key, default to global UIKey (End)
+        Key = Options.Key,
+        Logo = Options.Logo,
+		ToggleKey = Options.ToggleKey or Library.UIKey,
 		Sections = {},
 		Elements = {},
 		Dragging = { false, UDim2.new(0, 0, 0, 0) },
@@ -502,6 +504,12 @@ end
 	local newgabrieluibyraphael = Instance.new("ScreenGui", Path)
 	newgabrieluibyraphael.Name = "a ui by raphael"
 	newgabrieluibyraphael.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+	Library:connection(UserInputService.InputBegan, function(Input)
+		if (Input.KeyCode == Library.UIKey) then
+			Library:SetOpen(not Library.Open)
+		end
+	end)
 
 	Library:connection(UserInputService.InputBegan, function(Input)
 		if (Input.KeyCode == Window.ToggleKey) then  -- Use window-specific toggle key
