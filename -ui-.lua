@@ -2775,24 +2775,8 @@ function Library.Window(self, Options)
 		textHolder.BackgroundTransparency = 1
 		textHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		textHolder.BorderSizePixel = 0
-		textHolder.Size = Library.UDim2(1, -52, 1, 0)
+		textHolder.Size = Library.UDim2(1, 0, 1, 0)
 		textHolder.Parent = sliderframe
-
-		local valueLabel = Instance.new("TextLabel")
-		valueLabel.Name = "ValueLabel"
-		valueLabel.BackgroundTransparency = 1
-		valueLabel.Text = tostring(Slider.Value) .. (Slider.Suffix or "")
-		valueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Or Library.Accent
-		valueLabel.TextSize = Library.GetScaledTextSize(12)
-		valueLabel.FontFace = Font.new("rbxassetid://12187365364", Enum.FontWeight.Medium)
-		valueLabel.TextXAlignment = Enum.TextXAlignment.Center
-		valueLabel.TextYAlignment = Enum.TextYAlignment.Center
-		valueLabel.Size = UDim2.new(1, 0, 1, 0)
-		valueLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-		valueLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-		valueLabel.ClipsDescendants = true
-		valueLabel.TextWrapped = true
-		valueLabel.Parent = textHolder
 
 		local slidername = Instance.new("TextLabel")		
 		slidername.Name = "Slidername"
