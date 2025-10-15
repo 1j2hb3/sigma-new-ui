@@ -520,7 +520,7 @@ function Library.Window(self, Options)
     local mainframe = Instance.new("Frame", newgabrieluibyraphael)
     mainframe.Name = "mainframe"
     mainframe.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
-    mainframe.BackgroundTransparency = 0.25
+    mainframe.BackgroundTransparency = 0.1
     mainframe.BorderColor3 = Color3.fromRGB(0, 0, 0)
     mainframe.BorderSizePixel = 0
 
