@@ -2775,7 +2775,7 @@ function Library.Window(self, Options)
 		textHolder.BackgroundTransparency = 1
 		textHolder.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		textHolder.BorderSizePixel = 0
-		textHolder.Size = Library.UDim2(1, 0, 1, 0)
+		textHolder.Size = Library.UDim2(1, -52, 1, 0)
 		textHolder.Parent = sliderframe
 
 		local slidername = Instance.new("TextLabel")		
@@ -2842,7 +2842,7 @@ function Library.Window(self, Options)
 		slidertextbox.Text = "50"
 		slidertextbox.TextColor3 = Color3.fromRGB(67, 67, 68)
 		slidertextbox.TextSize = Library.GetScaledTextSize(12)
-		slidertextbox.TextXAlignment = Enum.TextXAlignment.Right
+		slidertextbox.TextXAlignment = Enum.TextXAlignment.Center
 		slidertextbox.Active = false
 		slidertextbox.AnchorPoint = Vector2.new(1, 0.5)
 		slidertextbox.AutomaticSize = Enum.AutomaticSize.X
