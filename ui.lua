@@ -2785,8 +2785,7 @@ function Library.Window(self, Options)
 		slidername.TextColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.TextSize = Library.GetScaledTextSize(12)
 		slidername.TextWrapped = true
-		slidername.TextXAlignment = Enum.TextXAlignment.Left
-		slidername.TextYAlignment = Enum.TextYAlignment.Left
+		slidername.TextXAlignment = Enum.TextXAlignment.Center
 		slidername.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		slidername.BackgroundTransparency = 1
 		slidername.BorderColor3 = Color3.fromRGB(0, 0, 0)
